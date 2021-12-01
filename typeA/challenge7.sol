@@ -50,7 +50,7 @@ contract verifySignature {
 
     function splitSignature(bytes memory _sig)
         public pure returns (bytes32 r, bytes32 s, uint8 v) {
-            require(_sig.length == 65, "invalid signature length");
+            require(_sig.length == 65, "invalid signature length"); // 65 bytes = 32 bytes for r + 32 bytes for s + 1 byte for v
 
             // add(x, y)        -> x + y
             // add(_sig, 32)    -> skips firt 32 bytes
