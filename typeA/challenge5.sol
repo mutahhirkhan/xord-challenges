@@ -46,7 +46,7 @@ contract WithdrawAfterTime {
         payable(userAddress).transfer(_amount);
         
         userToAmount[userAddress].amount = specificUser.amount - _amount;
-        userToAmount[userAddress].freezeTime = block.timestamp + (2 * 60);
+        userToAmount[userAddress].freezeTime = userToAmount[userAddress].freezeTime + (2 * 60);
 
         emit ethersWithdrawSuccess(userAddress, userToAmount[userAddress].amount);
         
