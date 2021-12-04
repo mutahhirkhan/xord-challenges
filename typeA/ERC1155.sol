@@ -118,7 +118,7 @@ contract Mutahhir is IERC1155, Ownable {
     function _mint(address _account, uint _id ,uint _amount, bytes memory _data) external onlyOwner
     {
        require(msg.sender == contractOwner,"You are not the Owner");
-        tokensToUser[_tokenId] = _account;
+        tokensToUser[_id] = _account;
         require(_account != address(0));
         holderValueForToken[_account][_id] += _amount;
         if (isContract(_account) ) {
