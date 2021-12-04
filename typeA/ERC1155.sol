@@ -66,11 +66,11 @@ contract Mutahhir is IERC1155, Ownable {
         emit TransferSingle(msg.sender, _from, _to, _id, _value);
         holderValueForToken[_from][_id] -= _value;
         holderValueForToken[_to][_id] += _value;
+        console.log(isContract(_to));
         if(isContract(_to)) {
-            bytes4 temp = IERC1155Receiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data); 
-                console.logBytes4(temp);
-
-            // _doSafeTransferAcceptanceCheck(msg.sender, _from, _to, _id, _value, _data);
+             IERC1155Receiver receiver = IERC1155Receiver(_to);
+            require(receiver.onERC1155Received(msg.sender, _from, _id, _value, _data)==
+            bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")),"Mutahhir: transfer rejected"); 
         }
 
     }
@@ -90,9 +90,9 @@ contract Mutahhir is IERC1155, Ownable {
         }
         emit TransferBatch(msg.sender, _from, _to, _ids, _values);
         if(isContract(_to)) {
-            console.log("is contract");
-            bytes4 temp = IERC1155Receiver(_to).onERC1155BatchReceived(msg.sender, _from, _ids, _values, _data); 
-                console.logBytes4(temp);
+            IERC1155Receiver receiver = IERC1155Receiver(_to);
+            require(receiver.onERC1155BatchReceived(msg.sender, _from, _ids, _values, _data)==
+            bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)")),"Mutahhir: transfer rejected");
         }
     }
 
@@ -117,7 +117,7 @@ contract Mutahhir is IERC1155, Ownable {
     
     function _mint(address _account, uint _id ,uint _amount, bytes memory _data) external onlyOwner
     {
-       require(msg.sender == contractOwner,"You are not the Owner");
+    //    require(msg.sender == contractOwner,"You are not the Owner");
         tokensToUser[_id] = _account;
         require(_account != address(0));
         holderValueForToken[_account][_id] += _amount;
@@ -130,40 +130,4 @@ contract Mutahhir is IERC1155, Ownable {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // function _doSafeTransferAcceptanceCheck(address _operator, address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) internal {
-
-    //     // If this was a hybrid standards solution you would have to check ERC165(_to).supportsInterface(0x4e2312e0) here but as this is a pure implementation of an ERC-1155 token set as recommended by
-    //     // the standard, it is not necessary. The below should revert in all failure cases i.e. _to isn't a receiver, or it is and either returns an unknown value or it reverts in the call to indicate non-acceptance.
-
-
-    //     // Note: if the below reverts in the onERC1155Received function of the _to address you will have an undefined revert reason returned rather than the one in the require test.
-    //     // If you want predictable revert reasons consider using low level _to.call() style instead so the revert does not bubble up and you can revert yourself on the ERC1155_ACCEPTED test.
-    //     require(ERC1155TokenReceiver(_to).onERC1155Received(_operator, _from, _id, _value, _data) == "ERC1155_ACCEPTED", "contract returned an unknown value from onERC1155Received");
-    // }
 }
