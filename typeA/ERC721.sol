@@ -3,6 +3,8 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 
 
 
@@ -75,7 +77,7 @@ contract Mutahhir  {
         emit Transfer(_from,_to,_tokenId);
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) public payable onlyExistentToken(_tokenId) {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) external payable onlyExistentToken(_tokenId) {
         transferFrom(_from, _to, _tokenId);
         if(isContract(_to)){
             IERC721Receiver receiver = IERC721Receiver(_to);
