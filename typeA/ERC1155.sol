@@ -4,6 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./ERC1155Bytes.sol";
 
 import "hardhat/console.sol";
 
@@ -19,7 +20,7 @@ import "hardhat/console.sol";
 //     ) external returns (bytes4);   
 // }
 
-contract Mutahhir is IERC1155, Ownable {
+contract Mutahhir is IERC1155, Ownable, ERC1155Bytes {
     
     address contractOwner;
     mapping(uint => address) tokensToUser;
@@ -59,16 +60,21 @@ contract Mutahhir is IERC1155, Ownable {
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data) external override {
         address owner = ownerOf(_id);
 
-        require(_from == msg.sender || isApprovedForAll(owner, msg.sender), "Mutahhir:: caller is not the operator");  // to ask
+        require(_from == owner || isApprovedForAll(owner, msg.sender), "Mutahhir:: caller is not the operator");  // to ask
         
         require(_to != address(0), "Mutahhir:: invalid address");
         require(holderValueForToken[_from][_id] <= _value, "Mutahhir:: Insufficient Balance");
+        console.log("till event");
         emit TransferSingle(msg.sender, _from, _to, _id, _value);
         holderValueForToken[_from][_id] -= _value;
         holderValueForToken[_to][_id] += _value;
         console.log(isContract(_to));
         if(isContract(_to)) {
-             IERC1155Receiver receiver = IERC1155Receiver(_to);
+             ERC1155Bytes receiver = ERC1155Bytes(_to);
+            //  bytes4 hashCheck = receiver.onERC1155Received(msg.sender, _from, _id, _value, _data);
+            //  bytes4 hashCheck2 = bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+            //  console.logBytes4(hashCheck);
+            //  console.logBytes4(hashCheck2);
             require(receiver.onERC1155Received(msg.sender, _from, _id, _value, _data)==
             bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")),"Mutahhir: transfer rejected"); 
         }
@@ -90,7 +96,7 @@ contract Mutahhir is IERC1155, Ownable {
         }
         emit TransferBatch(msg.sender, _from, _to, _ids, _values);
         if(isContract(_to)) {
-            IERC1155Receiver receiver = IERC1155Receiver(_to);
+            ERC1155Bytes receiver = ERC1155Bytes(_to);
             require(receiver.onERC1155BatchReceived(msg.sender, _from, _ids, _values, _data)==
             bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)")),"Mutahhir: transfer rejected");
         }
@@ -122,12 +128,32 @@ contract Mutahhir is IERC1155, Ownable {
         require(_account != address(0));
         holderValueForToken[_account][_id] += _amount;
         if (isContract(_account) ) {
-            IERC1155Receiver receiver = IERC1155Receiver(_account);
+            ERC1155Bytes receiver = ERC1155Bytes(_account);
             receiver.onERC1155Received(msg.sender,address(0),_id,_amount,_data);
             
         }
         emit TransferSingle(msg.sender,address(0),_account,_id,_amount);
 
     }
+
+    // function onERC1155Received(
+    //     address operator,
+    //     address from,
+    //     uint256 id,
+    //     uint256 value,
+    //     bytes calldata data
+    // ) external override returns (bytes4) {
+    //     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    // }
+
+    // function onERC1155BatchReceived(
+    //     address operator,
+    //     address from,
+    //     uint256[] calldata ids,
+    //     uint256[] calldata values,
+    //     bytes calldata data
+    // ) external override returns (bytes4) {
+    //     return bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"));
+    // }
 
 }
