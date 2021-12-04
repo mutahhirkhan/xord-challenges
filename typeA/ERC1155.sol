@@ -3,6 +3,8 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 import "hardhat/console.sol";
 
 // interface IERC1155Receiver { 
@@ -17,7 +19,7 @@ import "hardhat/console.sol";
 //     ) external returns (bytes4);   
 // }
 
-contract Mutahhir is IERC1155 {
+contract Mutahhir is IERC1155, Ownable {
     
     address contractOwner;
     mapping(uint => address) tokensToUser;
@@ -113,9 +115,10 @@ contract Mutahhir is IERC1155 {
               interfaceID == 0x4e2312e0;      // ERC-1155 `ERC1155TokenReceiver` support (i.e. `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)")) ^ bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`).
     }
     
-    function _mint(address _account, uint _id ,uint _amount, bytes memory _data) public 
+    function _mint(address _account, uint _id ,uint _amount, bytes memory _data) external onlyOwner
     {
     //    require(msg.sender == contractOwner,"You are not the Owner");
+        tokensToUser[_tokenId] = _account;
         require(_account != address(0));
         holderValueForToken[_account][_id] += _amount;
         if (isContract(_account) ) {
