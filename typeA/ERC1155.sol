@@ -57,11 +57,13 @@ contract Mutahhir is IERC1155 {
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes calldata _data) external override {
         address owner = ownerOf(_id);
 
-        require(_from == msg.sender || operatorApprovals[owner][msg.sender], "Mutahhir:: caller is not the operator");  // to ask
+        require(_from == msg.sender || isApprovedForAll(owner, msg.sender), "Mutahhir:: caller is not the operator");  // to ask
         
         require(_to != address(0), "Mutahhir:: invalid address");
         require(holderValueForToken[_from][_id] <= _value, "Mutahhir:: Insufficient Balance");
         emit TransferSingle(msg.sender, _from, _to, _id, _value);
+        holderValueForToken[_from][_id] -= _value;
+        holderValueForToken[_to][_id] += _value;
         if(isContract(_to)) {
             bytes4 temp = IERC1155Receiver(_to).onERC1155Received(msg.sender, _from, _id, _value, _data); 
                 console.logBytes4(temp);
@@ -100,7 +102,7 @@ contract Mutahhir is IERC1155 {
         
     }
 
-    function isApprovedForAll(address _owner, address _operator) external view override returns (bool) {
+    function isApprovedForAll(address _owner, address _operator) public view override returns (bool) {
         return operatorApprovals[_owner][_operator];
 
     }
