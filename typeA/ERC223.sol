@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
+import "hardhat/console.sol";
+// import "browser/ERC223.sol";
+// import "browser/ERC223ReceivingContract.sol";
 
 interface ERC223 {
     function transfer(address to, uint value, bytes calldata data) external;
     event Transfer(address indexed from, address indexed to, uint value, bytes indexed data);
 }
 
-interface ERC223ReceivingContract { 
+interface ReceiverContract { 
     function tokenFallback(address _from, uint _value, bytes calldata _data) external;
 }
 
@@ -27,6 +30,7 @@ contract Mutahhir is ERC223 {
     event TransferFrom(address indexed from, address indexed to, uint256 value);
 
     event Approval(address indexed from, address indexed to, uint256 value);
+    event mint(address indexed to, uint256 value);
 
     constructor () ERC223() {
         symbol = "MIT";
@@ -57,6 +61,12 @@ contract Mutahhir is ERC223 {
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
+    function _mint(address _account, uint256 _amount) public {
+        require(_account != address(0), "Mutahhir: can't mint on an invalid address");
+        _totalSupply += _amount;
+        balance[_account] += _amount;
+        emit mint(_account, _amount);
+    }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
         
@@ -74,6 +84,7 @@ contract Mutahhir is ERC223 {
     function approve(address _spender, uint256 _value) public returns (bool success) {
         require(_spender != address(0), "Mutahhir:: invalid address");
         allowed[msg.sender][_spender] = _value;
+        console.log(allowed[msg.sender][_spender]);
         emit Approval(msg.sender, _spender, _value);
         return true;
     }
@@ -94,7 +105,7 @@ contract Mutahhir is ERC223 {
         require(balance[caller] >= _value, "Mutahhir:: insufficient balance");
         balance[caller] -= _value;
         balance[_to] += _value;
-        ERC223ReceivingContract _receivingContract = ERC223ReceivingContract(_to);
+        ReceiverContract _receivingContract = ReceiverContract(_to);
         _receivingContract.tokenFallback(caller, _value, _data);
 
         emit Transfer(caller, _to, _value);

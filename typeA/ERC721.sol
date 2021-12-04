@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.4;
 
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+
 
 
 contract Mutahhir  {
@@ -51,7 +53,7 @@ contract Mutahhir  {
         return tokensToUser[_tokenId];
     }
 
-    function transferFrom(address _from, address _to, uint256 _tokenId) public payable{
+    function transferFrom(address _from, address _to, uint256 _tokenId) public payable onlyExistentToken(_tokenId){
         authorized[_tokenId];
         isApprovedForAll(_from, msg.sender);
 
@@ -73,7 +75,7 @@ contract Mutahhir  {
         emit Transfer(_from,_to,_tokenId);
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) public payable {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) public payable onlyExistentToken(_tokenId) {
         transferFrom(_from, _to, _tokenId);
         if(isContract(_to)){
             IERC721Receiver receiver = IERC721Receiver(_to);
@@ -83,11 +85,11 @@ contract Mutahhir  {
         } 
     }
 
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable {
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable onlyExistentToken(_tokenId) {
         safeTransferFrom(_from, _to, _tokenId, "");
     }
 
-    function approve(address _approved, uint256 _tokenId) external payable {
+    function approve(address _approved, uint256 _tokenId) external payable onlyExistentToken(_tokenId){
         address owner = ownerOf(_tokenId);
         require( msg.sender == owner || _operatorApprovals[owner][msg.sender], "sender is not owner or operator");
         authorized[_tokenId] = _approved;
@@ -101,13 +103,24 @@ contract Mutahhir  {
         emit ApprovalForAll(msg.sender, _operator, _approved);
     }
 
-    function getApproved(uint256 _tokenId) external view returns (address) {
+    function getApproved(uint256 _tokenId) external view onlyExistentToken(_tokenId) returns (address)  {
         require(_tokenId <= count);
         return authorized[_tokenId];
     }
 
     function isApprovedForAll(address _owner, address _operator) public view returns (bool){
         return _operatorApprovals[_owner][_operator];
+    }
+
+    function mintTokens(uint _tokenId) public onlyNonExistentToken(_tokenId) {
+
+        mintedToken[count] = true;
+
+        // totalSupply = totalSupply + 1;
+
+        count++;
+        tokensToUser[count] = msg.sender;
+        userToToken[msg.sender] = count;
     }
 
 

@@ -7,6 +7,8 @@ contract Mutahhir {
     string public  name;
     uint8 public decimals;
     uint public _totalSupply;
+    uint public _totalTokens;
+
 
     mapping(address => uint) balance;
 
@@ -67,4 +69,19 @@ contract Mutahhir {
         return allowed[_owner][_spender];
 
     }
+
+    function _mint(address _account, uint256 _amount) public
+    {
+        require(_account!=address(0));
+        require(_totalTokens + _amount <= _totalSupply,"Mutahhir: mint limt reached");
+        _totalTokens += _amount;
+        balance[_account] += _amount;
+        // emit Transfer(address(0), _account, _amount);
+    } 
+
+
+
+
+
+
 }
