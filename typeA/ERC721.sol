@@ -59,14 +59,15 @@ contract Mutahhir is IERC721 ,ERC165{
     }
 
     function transferFrom(address _from, address _to, uint256 _tokenId) public  override onlyExistentToken(_tokenId){
-        authorized[_tokenId];
-        isApprovedForAll(_from, msg.sender);
+        address isapprovAddress = authorized[_tokenId];
+        bool isApprov = isApprovedForAll(_from, msg.sender);
+        console.log(isApprov, isapprovAddress);
 
         address tokenOwner = ownerOf(_tokenId);
         
-        require(tokenOwner == msg.sender || _operatorApprovals[_from][msg.sender] || authorized[_tokenId] == msg.sender, "no rights to manipulate");
+        require(_from == tokenOwner || tokenOwner == msg.sender || _operatorApprovals[_from][msg.sender] || authorized[_tokenId] == msg.sender, "ERC721: no rights to manipulate");
 
-        require(_from == tokenOwner,"From does not own the token");
+        // require(_from == tokenOwner,"ERC721: From does not own the token");
         
         require(_to != address(0));
         
@@ -96,14 +97,14 @@ contract Mutahhir is IERC721 ,ERC165{
 
     function approve(address _approved, uint256 _tokenId) external  override onlyExistentToken(_tokenId){
         address owner = ownerOf(_tokenId);
-        require( msg.sender == owner || _operatorApprovals[owner][msg.sender], "sender is not owner or operator");
+        require( msg.sender == owner || _operatorApprovals[owner][msg.sender], "ERC721: sender is not owner or operator");
         authorized[_tokenId] = _approved;
         emit Approval(msg.sender, _approved, _tokenId);
 
     }
 
     function setApprovalForAll(address _operator, bool _approved) external override {
-        require(_operator != address(0), "invalid operator address");
+        require(_operator != address(0), "ERC721: invalid operator address");
         _operatorApprovals[msg.sender][_operator] = _approved;
         emit ApprovalForAll(msg.sender, _operator, _approved);
     }
