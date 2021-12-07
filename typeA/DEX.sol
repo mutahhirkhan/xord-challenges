@@ -13,7 +13,7 @@ import "hardhat/console.sol";
 //itemId => marketItem id
 
 contract DEX is Mutahhir, ReentrancyGuard {
-    uint itemId = 0;
+    uint itemId = 1;
     uint itemsSold = 0;
 
     // itemId => price => MarketItem
@@ -73,18 +73,19 @@ contract DEX is Mutahhir, ReentrancyGuard {
 
     }
     function listAllItems() public view returns (MarketItem [] memory ) {
-        uint unsoldItems = itemId - itemsSold;
+        uint unsoldItems = itemId - itemsSold - 1;  //itemId starts from 1 and itemsSold start from 0
         MarketItem[] memory allMarketItems = new MarketItem[](unsoldItems); //the length of this array will be unsoldItems
         uint currentIndex = 0;
-
+        console.log("unsoldItems length");
+        console.log(unsoldItems);
         for (uint i = 0; i < itemId; i++) {
             //check for unsold items
-            if (requiredMarketItem[i + 1].owner == address(0)) {
-                uint currentId = requiredMarketItem[i + 1].itemId;
+            MarketItem memory currentMarketItem = requiredMarketItem[i+1];
+            if (currentMarketItem.owner == address(0) && currentMarketItem.itemId >= 1) {
+                uint currentId = currentMarketItem.itemId;
                 MarketItem memory currentItem = requiredMarketItem[currentId];
-                console.log(currentItem.price);
                 allMarketItems[currentIndex] = currentItem;
-                currentId++;
+                currentIndex++;
             }
         }
         return allMarketItems;
