@@ -42,10 +42,10 @@ contract DEX is ReentrancyGuard {
         // isApprovedForAll
         console.log("price is all good");
         
-        address owner = Mutahhir(_nftContract).ownerOf(_tokenId);
+        address owner = IERC721(_nftContract).ownerOf(_tokenId);
         require(owner == msg.sender || 
-                Mutahhir(_nftContract).getApproved(_tokenId) == msg.sender || 
-                Mutahhir(_nftContract).isApprovedForAll(owner, msg.sender), "DEX: not the operator or owner or authorized");
+                IERC721(_nftContract).getApproved(_tokenId) == msg.sender || 
+                IERC721(_nftContract).isApprovedForAll(owner, msg.sender), "DEX: not the operator or owner or authorized");
         console.log("owner checks passed");
         requiredMarketItem[itemId] = MarketItem(itemId,_nftContract, _tokenId, _price, payable(msg.sender), payable(address(0)));
         itemId++;
@@ -66,7 +66,7 @@ contract DEX is ReentrancyGuard {
         require(msg.value == price, "DEX: please send the required amount to process ");
         
         console.log("transferring ownership to buyer");
-        Mutahhir(_nftContract).safeTransferFrom(seller, msg.sender, tokenId);
+        IERC721(_nftContract).safeTransferFrom(seller, msg.sender, tokenId);
         
         //transfer amount
         console.log("transferring amount to buyer");
@@ -75,9 +75,8 @@ contract DEX is ReentrancyGuard {
         requiredMarketItem[_itemId].owner = payable(msg.sender); 
         itemsSold++;
         emit MarketItemSold( _itemId, _nftContract, tokenId, price, _item.seller, msg.sender);
-
-
     }
+
     function listAllItems() public view returns (MarketItem [] memory ) {
         uint unsoldItems = itemId - itemsSold - 1;  //itemId starts from 1 and itemsSold start from 0
         MarketItem[] memory allMarketItems = new MarketItem[](unsoldItems); //the length of this array will be unsoldItems
