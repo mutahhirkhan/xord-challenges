@@ -11,8 +11,10 @@ import "hardhat/console.sol";
 
 //tokenId => nft id
 //itemId => marketItem id
+//tokenId => nft id
+//itemId => marketItem id
 
-contract DEX is Mutahhir, ReentrancyGuard {
+contract DEX is ReentrancyGuard {
     uint itemId = 1;
     uint itemsSold = 0;
 
@@ -21,35 +23,38 @@ contract DEX is Mutahhir, ReentrancyGuard {
 
     struct MarketItem {
         uint256 itemId; //unique identifier for marketplace
-        // address nftContract; //contract address for digital asset
+        address nftContract; //contract address for digital asset
         uint256 tokenId; //asset id
         uint256 price; //price on sale
         address payable seller; //person putting item on sale
         address payable owner; //initially empty because yet not sold
     }
 
-    event MarketItemCreated (uint  _itemId, uint indexed _tokenId, uint indexed _price, address indexed _seller, address _buyer);
-    event MarketItemSold (uint  _itemId, uint indexed _tokenId, uint  _price, address indexed _seller, address indexed _buyer);
+    event MarketItemCreated (uint  _itemId,  address _nftContract, uint indexed _tokenId, uint indexed _price, address indexed _seller, address _buyer);
+    event MarketItemSold (uint  _itemId  ,  address _nftContract, uint indexed _tokenId, uint  _price, address indexed _seller, address indexed _buyer);
 
-    function createMarketItem(uint _tokenId, uint _price) external {
+    function createMarketItem(address _nftContract, uint _tokenId, uint _price) external nonReentrant {
         console.log("sale start");
         require(_price >= 0, "DEX: Price can not be negative");
-
+        
         // ownerOf
         // getApproved
         // isApprovedForAll
         console.log("price is all good");
-        address owner = ownerOf(_tokenId);
-        require(owner == msg.sender || getApproved(_tokenId) == msg.sender || isApprovedForAll(owner, msg.sender), "DEX: not the operator or owner or authorized");
+        
+        address owner = Mutahhir(_nftContract).ownerOf(_tokenId);
+        require(owner == msg.sender || 
+                Mutahhir(_nftContract).getApproved(_tokenId) == msg.sender || 
+                Mutahhir(_nftContract).isApprovedForAll(owner, msg.sender), "DEX: not the operator or owner or authorized");
         console.log("owner checks passed");
-        requiredMarketItem[itemId] = MarketItem(itemId, _tokenId, _price, payable(msg.sender), payable(address(0)));
+        requiredMarketItem[itemId] = MarketItem(itemId,_nftContract, _tokenId, _price, payable(msg.sender), payable(address(0)));
         itemId++;
         console.log("item put on sale");
-        emit MarketItemCreated(itemId, _tokenId, _price ,msg.sender, address(0));
+        emit MarketItemCreated(itemId, _nftContract, _tokenId, _price ,msg.sender, address(0));
 
 
     }
-    function createMarketSale(uint _itemId  )public payable{
+    function createMarketSale(address _nftContract, uint _itemId  )public payable nonReentrant{
         require(msg.sender != address(0));
         MarketItem memory _item = requiredMarketItem[_itemId];
         uint256 price = _item.price;
@@ -61,7 +66,7 @@ contract DEX is Mutahhir, ReentrancyGuard {
         require(msg.value == price, "DEX: please send the required amount to process ");
         
         console.log("transferring ownership to buyer");
-        safeTransferFrom(seller, msg.sender, tokenId);
+        Mutahhir(_nftContract).safeTransferFrom(seller, msg.sender, tokenId);
         
         //transfer amount
         console.log("transferring amount to buyer");
@@ -69,7 +74,8 @@ contract DEX is Mutahhir, ReentrancyGuard {
 
         requiredMarketItem[_itemId].owner = payable(msg.sender); 
         itemsSold++;
-        emit MarketItemSold( _itemId, tokenId, price, _item.seller, msg.sender);
+        emit MarketItemSold( _itemId, _nftContract, tokenId, price, _item.seller, msg.sender);
+
 
     }
     function listAllItems() public view returns (MarketItem [] memory ) {
