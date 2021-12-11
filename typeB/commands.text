@@ -1,7 +1,7 @@
 COMMANDS FOR TRUFFLE WEB3
 truffle migrate --network ropsten --reset
 node script.js
-
+-- truffle refernce: https://morioh.com/p/d3ef8b16c770
 
 COMMANDS FOR HARDHAT ETHERJS
 npx hardhat run --network rinkeby ./scripts/deploy.js
