@@ -30,10 +30,10 @@ async function main() {
 
     // Set up an ethers contract, representing our deployed Box instance
     const address = "0xdd1B9731D1eac27f706B7E09194644D6B68f7A4a";
-    const Box = await ethers.getContractFactory("Mutahhir");
-    const box = await Box.attach(address);
-    const value = await box.functions.totalSupply();
-    console.log("Box value is", value.toString());
+    const contract = await ethers.getContractFactory("Mutahhir");
+    const contractInstance = await contract.attach(address);
+    const value = await contractInstance.functions.totalSupply();
+    console.log("total supply is: ", value.toString());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
