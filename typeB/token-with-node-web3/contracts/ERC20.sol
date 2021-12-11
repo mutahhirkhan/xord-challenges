@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity 0.8.10;
-// 0.8.10 documentation
+pragma solidity >=0.7.0 <0.9.0;
 
 contract Mutahhir {
     string public symbol;
@@ -21,6 +20,7 @@ contract Mutahhir {
     event TransferFrom(address indexed from, address indexed to, uint256 value);
 
     event Approval(address indexed from, address indexed to, uint256 value);
+    event Mint(address indexed to, uint256 value);
 
     constructor () {
         symbol = "MIT";
@@ -77,12 +77,7 @@ contract Mutahhir {
         require(_totalTokens + _amount <= _totalSupply,"Mutahhir: mint limt reached");
         _totalTokens += _amount;
         balance[_account] += _amount;
-        // emit Transfer(address(0), _account, _amount);
+        emit Mint(_account, _amount);
     } 
-
-
-
-
-
 
 }

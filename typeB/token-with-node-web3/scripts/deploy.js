@@ -14,12 +14,26 @@ async function main() {
     // await hre.run('compile');
 
     // We get the contract to deploy
-    const Greeter = await hre.ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, Hardhat!");
+     const [deployer] = await ethers.getSigners();
+     
+     console.log("Deploying contracts with the account:", deployer.address);
+     
+     console.log("Account balance:", (await deployer.getBalance()).toString());
+     
+     const MIT20 = await ethers.getContractFactory("Mutahhir");
+     const mit20 = await MIT20.deploy();
+     
+     console.log("Mutahhir ERC20 address:", mit20.address);
 
-    await greeter.deployed();
 
-    console.log("Greeter deployed to:", greeter.address);
+
+
+    // Set up an ethers contract, representing our deployed Box instance
+    const address = "0xdd1B9731D1eac27f706B7E09194644D6B68f7A4a";
+    const Box = await ethers.getContractFactory("Mutahhir");
+    const box = await Box.attach(address);
+    const value = await box.functions.totalSupply();
+    console.log("Box value is", value.toString());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -27,7 +41,6 @@ async function main() {
 main()
     .then(() => process.exit(0))
     .catch((error) => {
-        console.log("find error", error);
         console.error(error);
         process.exit(1);
     });
