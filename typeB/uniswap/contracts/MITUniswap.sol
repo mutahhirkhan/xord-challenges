@@ -27,7 +27,7 @@ contract MITUniswap {
             address [] memory path  = new address [](2);
             path[0] = _tokenAddress1;
             path[1] = _tokenAddress2;
-            IERC20(_tokenAddress1).approve(address(this), _amountIn);
+            IERC20(_tokenAddress1).approve(address(uniswaprouteraddress), _amountIn);
             //6 hours lineancy for tx execution
             uint[] memory amountOfDifferentTokens = uniswap.swapExactTokensForTokens(_amountIn, _amountOutMin, path, msg.sender, block.timestamp + lineancy);    
             return amountOfDifferentTokens;
@@ -43,7 +43,7 @@ contract MITUniswap {
             address [] memory path  = new address [](2);
             path[0] = _tokenAddress1;
             path[1] = _tokenAddress2;
-            IERC20(_tokenAddress1).approve(address(this), _amountInMax);
+            IERC20(_tokenAddress1).approve(address(uniswaprouteraddress), _amountInMax);
             uint[] memory amountOfDifferentTokens = uniswap.swapTokensForExactTokens(_amountInMax, _amountOut, path, msg.sender, block.timestamp + lineancy);    
             return amountOfDifferentTokens;
     }
@@ -64,7 +64,7 @@ contract MITUniswap {
             address [] memory path  = new address [](2);
             path[0] = _tokenAddress;
             path[1] = uniswap.WETH();
-            IERC20(_tokenAddress).approve(address(this), _amountInMax);
+            IERC20(_tokenAddress).approve(address(uniswaprouteraddress), _amountInMax);
             uint[] memory amountOfDifferentTokens = uniswap.swapTokensForExactETH(_amountOut, _amountInMax, path,  msg.sender, block.timestamp + lineancy);
             return amountOfDifferentTokens;
 
