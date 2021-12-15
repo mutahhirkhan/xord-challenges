@@ -7,8 +7,10 @@ contract MITUniswap {
     // UniswapV2Router02 uniswap;
 
     address  uniswaprouteraddress = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address uniswapFactory = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
+    address uniswapFactoryAddress = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
     IUniswap uniswap = IUniswap(uniswaprouteraddress);
+    IUniswapV2Factory factory = IUniswapV2Factory(uniswapFactoryAddress);
+
 
     modifier ensure(uint _leniency) {
         require(block.timestamp + _leniency >= block.timestamp, "MITUniswap: EXPIRED");
@@ -114,5 +116,27 @@ contract MITUniswap {
             IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amountTokenDesired);
             IERC20(_tokenAddress).approve(address(uniswap), _amountTokenDesired);
             (amountToken, amountETH, liquidity) = uniswap.addLiquidityETH{value:_amountETHDesired}( _tokenAddress, _amountTokenDesired, _amountTokenMin, _amountETHMin, msg.sender, block.timestamp + lineancy);
+    }
+
+    function removeLiq (address _tokenA, address _tokenB, uint _liquidity, uint _amountAMin, uint _amountBMin, address _user) 
+        external returns (uint _amountA, uint _amountB) {
+            address caller = msg.sender;
+            
+            address pair = factory.getPair(_tokenA, _tokenB);
+            require(pair != address(0), "MITUniswap: no pool address found");
+            
+            uint LPTokensAmount = IUniswapV2Pair(pair).balanceOf(caller);
+            require(LPTokensAmount >= _liquidity, "MITUniswap: given LP Tokens are higher than present tokens");
+            
+            uint tokensAbleToSpend = IUniswapV2Pair(pair).allowance(caller, address(this));
+            require(tokensAbleToSpend > _liquidity, "MITUniswap: insufficient tokens to spend");
+
+            bool transferSuccess = IUniswapV2Pair(pair).transferFrom(_user, address(this), _liquidity);
+
+            if(transferSuccess) {
+                bool isApproved = IUniswapV2Pair(pair).approve(_user, _liquidity);
+                require(isApproved == true, "MITUniswap: Not Approved");
+            }
+            (_amountA, _amountB) = uniswap.removeLiquidity(_tokenA, _tokenB, _liquidity, _amountAMin, _amountBMin, _user, block.timestamp + lineancy);
     }
 }   
