@@ -98,4 +98,21 @@ contract MITUniswap {
         
     }
     */
+
+        
+    function addLiq(address _tokenA, address _tokenB, uint _amountADesired, uint _amountBDesired, uint _amountAMin, uint _amountBMin) 
+        external returns (uint amountA, uint amountB, uint liquidity) {
+            IERC20(_tokenA).transferFrom(msg.sender, address(this), _amountADesired);
+            IERC20(_tokenB).transferFrom(msg.sender, address(this), _amountBDesired);
+            IERC20(_tokenA).approve(address(uniswap), _amountADesired);
+            IERC20(_tokenB).approve(address(uniswap), _amountBDesired);
+            (amountA, amountB, liquidity) = uniswap.addLiquidity(_tokenA, _tokenB, _amountADesired, _amountBDesired, _amountAMin, _amountBMin, msg.sender, block.timestamp + lineancy);
+    }
+
+    function addLiqByEth(address _tokenAddress, uint _amountTokenDesired, uint _amountTokenMin, uint _amountETHMin, uint _amountETHDesired) 
+        external  returns (uint amountToken, uint amountETH, uint liquidity) {
+            IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amountTokenDesired);
+            IERC20(_tokenAddress).approve(address(uniswap), _amountTokenDesired);
+            (amountToken, amountETH, liquidity) = uniswap.addLiquidityETH{value:_amountETHDesired}( _tokenAddress, _amountTokenDesired, _amountTokenMin, _amountETHMin, msg.sender, block.timestamp + lineancy);
+    }
 }   
