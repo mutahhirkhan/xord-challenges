@@ -57,8 +57,8 @@ contract MITUniswap {
     }
 
     function swapTokForExEth(uint _amountOut, uint _amountInMax, address _tokenAddress) 
-            external ensure(lineancy) 
-            returns (uint[] memory amounts) 
+        external ensure(lineancy) 
+        returns (uint[] memory amounts) 
             {
             IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amountInMax);
             address [] memory path  = new address [](2);
@@ -69,4 +69,33 @@ contract MITUniswap {
             return amountOfDifferentTokens;
 
     }
+        function swapETHForExToks(uint _amountOut, address _tokenAddress) 
+        external
+        returns (uint[] memory amounts) 
+            {
+            address [] memory path  = new address [](2);
+            path[0] = uniswap.WETH();
+            path[1] = _tokenAddress;
+            // IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amountInMax);
+            uint[] memory amountOfDifferentTokens = uniswap.swapETHForExactTokens(_amountOut, path, msg.sender, block.timestamp + lineancy);
+            return amountOfDifferentTokens;
+    }
+
+    /*
+    function swapExTokForTokWithSupportingFee( 
+        address _tokenAddress1,
+        address _tokenAddress2,
+        uint _amountIn,
+        uint _amountOutMin) 
+        external ensure(lineancy)
+            {
+            IERC20(_tokenAddress1).transferFrom(msg.sender, address(this), _amountIn);
+            address [] memory path  = new address [](2);
+            path[0] = _tokenAddress1;
+            path[1] = _tokenAddress2;
+            IERC20(_tokenAddress1).approve(address(uniswaprouteraddress), _amountIn);
+            uniswap.swapExactTokensForTokensSupportingFeeOnTransferTokens(_amountIn, _amountOutMin, path, msg.sender, block.timestamp + lineancy);    
+        
+    }
+    */
 }   
