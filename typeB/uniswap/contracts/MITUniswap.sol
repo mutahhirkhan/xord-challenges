@@ -128,8 +128,8 @@ contract MITUniswap {
             uint LPTokensAmount = IUniswapV2Pair(pair).balanceOf(caller);
             require(LPTokensAmount >= _liquidity, "MITUniswap: given LP Tokens are higher than present tokens");
             
-            uint tokensAbleToSpend = IUniswapV2Pair(pair).allowance(caller, address(this));
-            require(tokensAbleToSpend > _liquidity, "MITUniswap: insufficient tokens to spend");
+            // uint tokensAbleToSpend = IUniswapV2Pair(pair).allowance(caller, address(this));
+            // require(tokensAbleToSpend > _liquidity, "MITUniswap: insufficient tokens to spend");
 
             bool transferSuccess = IUniswapV2Pair(pair).transferFrom(_user, address(this), _liquidity);
 
