@@ -10,3 +10,13 @@ COMMANDS FOR SIGN-MESSAGE
 truffle compile
 truffle migrate --network ropsten --reset
 node scripts/script.js
+
+SUBGRAPH
+https://thegraph.com/docs/studio/subgraph-studio
+
+yarn global add @graphprotocol/graph-cli
+graph init --studio <SUBGRAPH_NAME>
+graph codegen
+graph build
+graph auth --studio <DEPLOY_KEY>
+graph deploy --studio <SUBGRAPH_NAME>
