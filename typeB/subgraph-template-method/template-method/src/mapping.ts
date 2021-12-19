@@ -3,8 +3,11 @@ import {
 } from "../generated/Parent/Parent"
 import { ParentEntity, ChildEntity } from "../generated/schema"
 import { Initialize } from './../generated/templates/Child/Child';
+import { log } from '@graphprotocol/graph-ts';
 
 export function handleChildGeneration(event: ChildGeneration): void {
+  log.info("YAHAN,{}",[""]);
+    log.info("here is the parent {}", [""]);
   let entity = ParentEntity.load(event.transaction.hash.toHex())
 
   if (!entity) {
@@ -19,12 +22,13 @@ export function handleChildGeneration(event: ChildGeneration): void {
 
 
 export function handleInitialize(event: Initialize): void {
+  log.info("YAHAN,{}",[""]);
+    log.info("here is the child {}", [""]);
   let entity = ChildEntity.load(event.transaction.hash.toHex())
 
   if (!entity) {
     entity = new ChildEntity(event.transaction.hash.toHex())
   }
-  entity.id
 
   entity._parentAddress = event.params._parentAddress
   entity._childAddress = event.params.childAddress
