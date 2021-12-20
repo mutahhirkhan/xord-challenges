@@ -6,9 +6,9 @@ dataSources:
     name: Parent
     network: rinkeby
     source:
-      address: "0x8EcD04cc12108Ed7B99F1f98d56D7f3C04D18D21"
+      address: "0xC8C5B1C860AFe614facdD0c6AB7Ddc75111810d4"
       abi: Parent
-      startBlock: 9828463
+      startBlock: 9845432
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
