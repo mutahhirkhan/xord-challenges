@@ -1,6 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-web3-legacy");
 require("@nomiclabs/hardhat-web3");
+require("dotenv").config();
+
 
 extendEnvironment((hre) => {
     const Web3 = require("web3");
@@ -8,6 +10,14 @@ extendEnvironment((hre) => {
     // hre.network.provider is an EIP1193-compatible provider.
     hre.web3 = new Web3(hre.network.provider);
 });
+let infuraApi;
+//check if INFURA_ID is set otherwise throw error
+if (process.env.INFURA_ID) {
+    infuraApi = process.env.INFURA_ID;
+} else {
+    throw new Error("INFURA_ID is not set");
+}
+
 
 /**
  task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -29,7 +39,7 @@ task("web3-accounts", "Prints accounts", async (_, { web3 }) => {
 task("balance", "Prints an account's balance")
     .addParam("account", "The account's address")
     .setAction(async (taskArgs, { web3 }) => {
-        web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/7f6f5921404842ba992a4d334431c6f7"));
+        web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/" + infuraApi));
         const account = web3.toChecksumAddress(taskArgs.account);
         console.log("account");
         console.log(account);
