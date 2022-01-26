@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "ansicolor": "^1.1.100",
+    "axios": "^0.25.0",
+    "dotenv": "^14.2.0",
+    "ethereumjs-tx": "^2.1.2",
+    "ololog": "^1.1.175",
+    "web3": "^1.7.0"
+  }
+}
