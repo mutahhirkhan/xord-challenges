@@ -1,21 +1,24 @@
 const getConfig = require("./config");
 
-let { 
-    contractInstance, 
-    amountToSend, 
-    account, 
-    EthereumTx, 
-    web3, 
-    web3Eth, 
-    contract, 
-    accountPrivateKey,
-    transactionObject, 
-    ...restConfig
-} = getConfig();
-
 const updateNonce = async () =>  await web3.eth.getTransactionCount(account, 'latest'); // nonce starts counting from 0
 
 const main = async () => {
+    let { 
+        contractInstance, 
+        amountToSend, 
+        account, 
+        EthereumTx, 
+        web3, 
+        web3Eth, 
+        contract, 
+        accountPrivateKey,
+        transactionObject, 
+        error,
+        ...restConfig
+    } = await  getConfig("0x574E0117a8c7B9b678c67061BB8528A3b932Ac7e");
+    
+    if(error) return restConfig.log(error.red);
+    
     const res = web3Eth.accounts.wallet.add(accountPrivateKey);
     transactionObject.nonce = await web3.eth.getTransactionCount(account, 'latest'); // nonce starts counting from 0
     
@@ -44,10 +47,11 @@ const main = async () => {
     // console.log("TransferFrom",result);
     // transactionObject.nonce = await updateNonce();
 
-    // // //ALLOWANCE
-    const result = await contractInstance.methods.allowance(account, restConfig.secondaryWallet).call();
-    console.log("Allowance",result);
-    transactionObject.nonce = await updateNonce();
+    // // // //ALLOWANCE
+    // const result = await contractInstance.methods.allowance(account, restConfig.secondaryWallet).call();
+    // console.log("Allowance",result);
+    // transactionObject.nonce = await updateNonce();
+
 
 };
 
