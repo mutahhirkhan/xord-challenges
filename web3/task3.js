@@ -4,14 +4,8 @@ async function main(contractAddress="0x574E0117a8c7B9b678c67061BB8528A3b932Ac7e"
     //contract address, event name, start block, end block\
     let { 
         contractInstance, 
-        amountToSend, 
         account, 
-        EthereumTx, 
-        web3, 
-        web3Eth, 
         contract, 
-        accountPrivateKey,
-        transactionObject, 
         error,
         ...restConfig
     } = await  getConfig(contractAddress);
