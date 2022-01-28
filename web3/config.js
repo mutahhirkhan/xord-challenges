@@ -1,7 +1,6 @@
 require("dotenv").config();
 const { default: axios } = require("axios");
 const Web3 = require("web3");
-var ether_port = 'http://localhost:8545'
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/v3/${process.env.INFURA_ACCESS_TOKEN}`));
 const webSocketWeb3 = new Web3(new Web3.providers.WebsocketProvider(`wss://mainnet.infura.io/ws/v3/${process.env.INFURA_ACCESS_TOKEN}`));
 const web3Mainnet = new Web3(new Web3.providers.WebsocketProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_ACCESS_TOKEN}`));
