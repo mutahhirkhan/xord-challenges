@@ -12,7 +12,6 @@ async function main(contractAddress='0xdAC17F958D2ee523a2206206994597C13D831ec7'
     // function takes contract address, events name and subscribes to the event defined
     let { 
         error,
-        web3Mainnet,
         webSocketWeb3Eth,
         ...restConfig
     } = await  getConfig(contractAddress, true);

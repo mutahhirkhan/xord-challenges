@@ -1,9 +1,10 @@
 require("dotenv").config();
+const ansi = require ('colors')
 const { default: axios } = require("axios");
 const Web3 = require("web3");
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io/v3/${process.env.INFURA_ACCESS_TOKEN}`));
 const webSocketWeb3 = new Web3(new Web3.providers.WebsocketProvider(`wss://mainnet.infura.io/ws/v3/${process.env.INFURA_ACCESS_TOKEN}`));
-const web3Mainnet = new Web3(new Web3.providers.WebsocketProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_ACCESS_TOKEN}`));
+const web3Mainnet = new Web3(new Web3.providers.HttpProvider(`https://mainnet.infura.io/v3/${process.env.INFURA_ACCESS_TOKEN}`));
 
 const config = async (contractAddress = "", isMainnet=false, amount = 0) => {
     try {
@@ -29,7 +30,7 @@ const config = async (contractAddress = "", isMainnet=false, amount = 0) => {
             webSocketWeb3Eth: webSocketWeb3.eth,
             EthereumTx: require("ethereumjs-tx"),
             log: require("ololog").configure({ time: true }),
-            ansi: require("ansicolor").nice,
+            ansi,
             accountPrivateKey:process.env.WALLET_PRIVATE_KEY,
             account: (web3.eth.defaultAccount = process.env.WALLET_ADDRESS),
             amountToSend: !amount ? 0.001 : amount,

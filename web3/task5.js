@@ -6,7 +6,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider(`https://rinkeby.infura.io
 
 async function getTransactionReceipt(txHash) {
     const transactionResponse = await web3.eth.getTransactionReceipt(txHash)
-    if(!transactionResponse.status) {
+    if(transactionResponse == undefined) return "Transaction not found or wrong network"
+    if(!transactionResponse?.status) {
         return {
             transactionFee:undefined,
             ...transactionResponse
