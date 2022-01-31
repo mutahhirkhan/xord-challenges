@@ -5,7 +5,7 @@ const main = async (accountAddress) => {
     if(!accountAddress) return "Please provide an account address";
     console.log("F E T C H I N G ... " );
     
-     function callEtherscanApi(page=1){
+    function callEtherscanApi(page=1){
         return  axios.get(`https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${accountAddress}&startblock=0&endblock=99999999&page=${page}&offset=1000sort=asc&apikey=F4SSISAJCDM9F5JG8FZN8NXCWBTNY6C73M`)
     };
     
