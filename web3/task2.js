@@ -1,6 +1,6 @@
 const getConfig = require("./config");
 
-const updateNonce = async () =>  await web3.eth.getTransactionCount(account, 'latest'); // nonce starts counting from 0
+const updateNonce = async (web3Eth) =>  await web3Eth.getTransactionCount(account, 'latest'); // nonce starts counting from 0
 
 const main = async () => {
     let { 
@@ -25,7 +25,7 @@ const main = async () => {
     //MINT
     // const minted = await contractInstance.methods._mint(account, "100").send(transactionObject,(err, data) => console.log(err, data));
     // console.log("minted", minted);
-    // transactionObject.nonce = await updateNonce();
+    // transactionObject.nonce = await updateNonce(web3Eth);
     
     
     //BALANCE
@@ -35,22 +35,22 @@ const main = async () => {
     // // //TRANSFER
     // const result = await contractInstance.methods.transfer(account,"50").send(transactionObject,(err, data) => console.log(err, data));
     // console.log("transfer",result.events.Transfer.raw);
-    // transactionObject.nonce = await updateNonce();
+    // transactionObject.nonce = await updateNonce(web3Eth);
     
     // // //APPROVE
     // const result = await contractInstance.methods.approve(restConfig.secondaryWallet,"50").send(transactionObject,(err, data) => console.log(err, data));
     // console.log("approve",result.events.Approval.raw);
-    // transactionObject.nonce = await updateNonce();
+    // transactionObject.nonce = await updateNonce(web3Eth);
 
     // // //TRANSFER FROM
     // const result = await contractInstance.methods.transferFrom(account, restConfig.secondaryWallet, "50").send(transactionObject,(err, data) => console.log(err, data));
     // console.log("TransferFrom",result);
-    // transactionObject.nonce = await updateNonce();
+    // transactionObject.nonce = await updateNonce(web3Eth);
 
     // // // //ALLOWANCE
     // const result = await contractInstance.methods.allowance(account, restConfig.secondaryWallet).call();
     // console.log("Allowance",result);
-    // transactionObject.nonce = await updateNonce();
+    // transactionObject.nonce = await updateNonce(web3Eth);
 
 
 };
