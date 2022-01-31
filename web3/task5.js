@@ -25,11 +25,14 @@ async function getTransactionReceipt(txHash) {
 }
 
 async function main(txHash="0x132fbca7a712903275de4b46b4ee7cbed82c9c99c29d8fb26743aa3f4e77b77b", isNode=true) {
+    //Create a function that takes tx-hash as input and outputs whether the transaction is confirmed or failed, if confirmed display the amount of tx_fees incurred 
+    
     // let { 
     //     error,
     //     web3Eth,
     //     ...restConfig
     // } = await  getConfig();
+
 
     let option;
     if(isNode) {

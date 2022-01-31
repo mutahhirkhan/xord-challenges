@@ -1,6 +1,7 @@
 const getConfig = require("./config");
 
 async function main(contractAddress='0xdAC17F958D2ee523a2206206994597C13D831ec7', eventName='Approval') {
+    // function takes contract address, events name and subscribes to the event defined
     const eventOpotions = {
         Approval:"0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
         Transfer:"0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
@@ -9,7 +10,6 @@ async function main(contractAddress='0xdAC17F958D2ee523a2206206994597C13D831ec7'
     let topicName = eventOpotions[eventName];
     if(!topicName) return "Invalid event name";
 
-    // function takes contract address, events name and subscribes to the event defined
     let { 
         error,
         webSocketWeb3Eth,

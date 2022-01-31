@@ -23,8 +23,8 @@ const main = async (accountAddress) => {
     let commulatedTransactions = [];
     while (flag) {
         const response = await callEtherscanApi(page);
-        let updatedArrayToPush = removeInputVariable(response.data.result)
-        commulatedTransactions = [...commulatedTransactions, ...updatedArrayToPush];
+        // let updatedArrayToPush = removeInputVariable(response.data.result)
+        commulatedTransactions = [...commulatedTransactions, ...response];
         page++;
 
         if(response.data.status == "0" || response.data.result.length < 1000) {
