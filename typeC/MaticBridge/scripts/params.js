@@ -1,0 +1,1 @@
+module.exports=["Second ERC20","MIT"];

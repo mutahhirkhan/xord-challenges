@@ -15,7 +15,7 @@ const config = async (contractAddress = "", isMainnet=false, amount = 0) => {
     let putRinkeby = isMainnet ? "" : "-rinkeby";
     const {data} = await axios.get(`https://api${putRinkeby}.etherscan.io/api?module=contract&action=getabi&address=${contract}`);
     let abiResult ; 
-    if(data?.result) abiResult = JSON.parse(data.result);
+    if(data.result) abiResult = JSON.parse(data.result);
 
         if(abiResult === "Contract source code not verified")  {
             return {

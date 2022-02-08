@@ -21,7 +21,7 @@ async function main(contractAddress='0xdAC17F958D2ee523a2206206994597C13D831ec7'
     var subscription = webSocketWeb3Eth.subscribe('logs', {
         address: contractAddress,
         topics:[topicName],
-        fromBlock:14087305
+        fromBlock:14163557
     }, (error, result) => {
         if (!error)
         console.log(result)
