@@ -3,7 +3,7 @@ pragma solidity 0.8.7;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MutahhirERC20  is IERC20{
-      string public symbol;
+    string public symbol;
     string public  name;
     uint8 public decimals = 18;
     uint public override totalSupply = 10000000000;
