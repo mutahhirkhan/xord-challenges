@@ -7,12 +7,12 @@ contract MaticBridgeContract{
     function _safeMint(address _to, uint256 _value) public payable{
 
     }
-    function mint(address _to, uint256 _amount) public payable{
-        require(_to != address(0));
-        require(_amount > 0);
-        require(msg.sender == owner);
-        balances[_to] += _amount;
-    }
+    // function mint(address _to, uint256 _amount) public payable{
+    //     require(_to != address(0));
+    //     require(_amount > 0);
+    //     require(msg.sender == owner);
+    //     balances[_to] += _amount;
+    // }
 
 
 }
