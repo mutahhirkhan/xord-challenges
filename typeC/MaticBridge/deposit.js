@@ -1,6 +1,6 @@
-const { getMaticPOSClient, from } = require("./../../config");
+const { getMaticPOSClient, from } = require("./config");
 
-const amount = "1_000_000_000_000_000"; // amount in wei
+const amount = "1_000_000_000_000_000"; // amount in wei 0.001 ETH
 const token = "0xf7E55e84d5419C4Aac87e67975959cb37a65Dcfb"; //parent (goerli)
 
 const execute = async () => {

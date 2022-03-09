@@ -1,4 +1,4 @@
-const { getMaticPOSClient, from } = require("./../../config")
+const { getMaticPOSClient, from } = require("./config")
 const token = "0xf9D9841aDb4F80F765dbFb1dEA09Fb0c6818d75Eg" //child erc20 (matic)
 
 const execute = async () => {
