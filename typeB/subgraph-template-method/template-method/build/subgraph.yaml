@@ -2,7 +2,7 @@ specVersion: 0.0.2
 schema:
   file: schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Parent
     network: rinkeby
     source:
@@ -24,7 +24,7 @@ dataSources:
       file: Parent\Parent.wasm
 templates:
   - name: Child
-    kind: ethereum
+    kind: ethereum/contract
     network: rinkeby
     source:
       abi: Child
