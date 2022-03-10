@@ -20,7 +20,7 @@ import {
   
   
 export function handleInitialize(event: Initialize): void {
-    log.info("YAHAN,{}",[""]);
+    log.info("YAHAN, in child entity",[""]);
     log.info("here is the initialization of child {}", [""]);
     let entity = ChildEntity.load(event.transaction.hash.toHex())
 
