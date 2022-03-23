@@ -1,0 +1,14 @@
+reference link=https://hardhat.org/hardhat-network/reference/
+
+contains 
+impersonating account, 
+manipulate timestamp, 
+increase block number, 
+change contract storage start index, 
+change account current nonce,
+change account balance,
+change account code,
+change account storage,
+change miner(coinbase) address
+
+etc.
